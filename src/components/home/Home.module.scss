@@ -1,0 +1,50 @@
+.main {
+  padding: 50px 0 100px;
+  .table_wrap {
+    @media screen and (max-width: 1210px) {
+      overflow-x: scroll;
+    }
+  }
+  table {
+    margin: 0 auto;
+    width: 90%;
+    justify-content: space-between;
+    border-collapse: separate;
+    border-spacing: 0 15px;
+    @media screen and (max-width: 1210px) {
+      width: 100%;
+    }
+    thead tr th {
+      padding-bottom: 20px;
+      font-weight: bold;
+      background: rgba(23, 23, 26, 1);
+      &:nth-child(1) {
+        position: sticky;
+        left: 0;
+      }
+      &:nth-child(2) {
+        position: sticky;
+        left: 58px;
+      }
+    }
+    tbody {
+      text-align: center;
+      width: 100%;
+      tr:not(:only-child):hover > td {
+        background-color: #515670;
+      }
+      td {
+        transition: all 0.2s ease-in-out;
+        background-color: rgba(23, 23, 26, 1);
+        &:nth-child(1) {
+          position: sticky;
+          left: 0;
+        }
+        &:nth-child(2) {
+          position: sticky;
+          left: 58px;
+        }
+      }
+    }
+  }
+}

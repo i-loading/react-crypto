@@ -1,0 +1,13 @@
+.single_cur {
+  td {
+    font-weight: lighter;
+    padding: 20px;
+    letter-spacing: 0.2px;
+    a {
+      color: #fff;
+    }
+    a:hover {
+      cursor: pointer;
+    }
+  }
+}

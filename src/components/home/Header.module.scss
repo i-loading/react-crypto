@@ -1,0 +1,138 @@
+.header {
+  padding: 10px 0;
+  & > div {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    grid-gap: 20px;
+    align-items: center;
+    @media screen and (max-width: 1210px) {
+      grid-template-columns: 1fr;
+      // justify-items: center;
+      max-width: 800px;
+    }
+    .header_help {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      @media screen and (max-width: 475px) {
+        flex-direction: column;
+        & * {
+          margin: 5px 0;
+        }
+      }
+      .lang,
+      .currency {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        svg {
+          margin-left: 6px;
+        }
+      }
+      .theme svg {
+        cursor: pointer;
+        width: 20px;
+        height: 20px;
+      }
+      .search {
+        position: relative;
+        cursor: pointer;
+        input {
+          background-color: rgb(23, 25, 36);
+          color: rgb(100, 107, 128);
+          border-radius: 8px;
+          padding: 8px;
+          padding-left: 24px;
+        }
+        svg {
+          fill: rgb(100, 107, 128);
+          width: 16px;
+          height: 16px;
+          position: absolute;
+          top: 8px;
+          left: 4px;
+        }
+        div {
+          display: inline-block;
+          position: absolute;
+          right: 26px;
+          height: 20px;
+          width: 20px;
+          border-radius: 4px;
+          background-color: rgb(100, 107, 128);
+          color: rgb(255, 255, 255);
+          line-height: 20px;
+          text-align: center;
+          &[data-text] {
+            top: 5px;
+            right: 10px;
+            position: absolute;
+            &:hover {
+              z-index: 200;
+              &::after,
+              &::before {
+                display: block;
+                opacity: 1;
+                top: 100%;
+                pointer-events: auto;
+              }
+            }
+            &::after,
+            &::before {
+              position: absolute;
+              z-index: 100;
+              top: 120%;
+              left: 50%;
+              transition: all 0.2s ease-in-out;
+              opacity: 0;
+              pointer-events: none;
+            }
+            &::before {
+              content: attr(data-text);
+              width: auto;
+              white-space: nowrap;
+              transform: translateX(-50%) translateY(50%);
+              padding: 4px 8px;
+              border-radius: 8px;
+              background: #fff;
+              color: #000;
+              text-align: center;
+              font-size: 12px;
+              font-weight: 500;
+              line-height: 1.5;
+              @media screen and (max-width: 1415px) {
+                left: -200%;
+              }
+            }
+            &::after {
+              content: "";
+              transform: translateX(-50%) translateY(2px);
+              border: 6px solid transparent;
+              border-bottom: 6px solid #fff;
+              display: block;
+            }
+          }
+        }
+      }
+      .search_light {
+        input {
+          background-color: rgb(239, 242, 245);
+          color: rgb(166, 176, 195);
+        }
+        div {
+          background-color: rgb(166, 176, 195);
+          color: rgb(255, 255, 255);
+          &[data-text] {
+            &::before {
+              background: #000;
+              color: #fff;
+            }
+            &::after {
+              border-bottom-color: #000;
+            }
+          }
+        }
+      }
+    }
+  }
+}
