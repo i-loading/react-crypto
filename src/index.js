@@ -28,6 +28,8 @@ const AppProvider = ({ children }) => {
   const [currency, setCurrency] = useState(
     () => localStorage.getItem("currency") || "USD"
   );
+  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   const themeHandler = (themeType) => {
     localStorage.setItem("theme", themeType);
@@ -42,10 +44,34 @@ const AppProvider = ({ children }) => {
   };
 
   const fetchCrypto = async () => {
-    const res = await fetch(`https://api.coincap.io/v2/assets?limit=50`);
-    const { data } = await res.json();
-    localStorage.setItem("currs", JSON.stringify(data));
-    setCurrencies(data);
+    try {
+      const res = await fetch(`https://api.coincap.io/v2/assets?limit=500`);
+      const { data } = await res.json();
+      const newData = [];
+      for (let i = 0; i < data.length; i++) {
+        const element = data[i];
+        const newElem = {
+          id: element.id,
+          name: element.name,
+          symbol: element.symbol,
+          rank: +Number(element.rank),
+          supply: +Number(element.supply).toFixed(1),
+          changePercent24Hr: +Number(element.changePercent24Hr).toFixed(1),
+          marketCapUsd: +Number(element.marketCapUsd).toFixed(1),
+          maxSupply: +Number(element.maxSupply).toFixed(0),
+          priceUsd: +Number(element.priceUsd).toFixed(2),
+          volumeUsd24Hr: +Number(element.volumeUsd24Hr).toFixed(0),
+        };
+        newData.push(newElem);
+      }
+      localStorage.setItem("currs", JSON.stringify(newData));
+      setCurrencies(newData);
+      setIsLoading(false);
+    } catch (e) {
+      setError(e.message);
+      setIsLoading(false);
+      throw new Error(e.message);
+    }
   };
 
   useEffect(() => {
@@ -62,6 +88,8 @@ const AppProvider = ({ children }) => {
     currency: currencySymbol[currency],
     currencyHandler: currencyHandler,
     singleCurData: singleCurData,
+    isLoading: isLoading,
+    error: error,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

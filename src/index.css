@@ -99,18 +99,23 @@ h6 {
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#222530",endColorstr="#17171a",GradientType=1);
   color: #fff;
 }
-.light {
+.dark a,
+.dark td,
+.dark th {
+  color: #fff;
+}
+
+.light,
+.light p,
+.light a,
+.light span,
+.light td,
+.light th {
   background: #fff !important;
   color: #000 !important;
 }
 .light svg {
   fill: #000 !important;
-}
-.light p,
-.light a,
-.light span {
-  background: #fff !important;
-  color: #000 !important;
 }
 
 @media screen and (max-width: 1321px) {

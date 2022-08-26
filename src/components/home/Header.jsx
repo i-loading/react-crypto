@@ -4,11 +4,37 @@ import { TickerTape } from "react-tradingview-embed";
 import { AiFillCaretDown, AiOutlineSearch } from "react-icons/ai";
 import { BsFillSunFill } from "react-icons/bs";
 import { IoMoonOutline } from "react-icons/io5";
-import { useContext } from "react";
+import { useContext, useEffect, useRef } from "react";
 import { AppContext } from "./../../index";
+
+const ESCAPE_KEYS = ["27", "Escape"];
+const useEventListener = (eventName, handler, element = window) => {
+  const savedHandler = useRef();
+
+  useEffect(() => {
+    savedHandler.current = handler;
+  }, [handler]);
+
+  useEffect(() => {
+    const eventListener = (event) => savedHandler.current(event);
+    element.addEventListener(eventName, eventListener);
+    return () => {
+      element.removeEventListener(eventName, eventListener);
+    };
+  }, [eventName, element]);
+};
 
 const Header = () => {
   const { theme, themeHandler } = useContext(AppContext);
+  const ref = useRef();
+
+  const handler = ({ key }) => {
+    if (ESCAPE_KEYS.includes(String(key))) {
+      ref.current.focus();
+    }
+  };
+
+  useEventListener("keydown", handler);
 
   return (
     <header className={s.header}>
@@ -70,8 +96,8 @@ const Header = () => {
             }`}
           >
             <AiOutlineSearch />
-            <input type="text" placeholder="Search" />
-            <div data-text="Use to trigger search">/</div>
+            <input type="text" placeholder="Search" ref={ref} />
+            <div data-text="Use to trigger search">esc</div>
           </div>
         </div>
       </div>

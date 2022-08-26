@@ -7,15 +7,19 @@ import Footer from "./components/home/Footer";
 import HomePage from "./components/home/Home";
 import SinglePage from "./components/single/SinglePage";
 import NotFound from "./components/not-found/NotFound";
+import Loader from "./components/Loader";
 
 export default function App() {
-  const { theme } = useContext(AppContext);
+  const { theme, isLoading, error } = useContext(AppContext);
   return (
     <div className={`${theme === "dark" ? "dark" : "light"} theme_wrap`}>
       <BrowserRouter basename="react-crypto/">
         <Header />
         <Routes>
-          <Route path="/" element={<HomePage />} />
+          <Route
+            path="/"
+            element={isLoading && !error ? <Loader /> : <HomePage />}
+          />
           <Route path="/currency/:singleId" element={<SinglePage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>

@@ -1,0 +1,29 @@
+.dark {
+  .table_pagination * {
+    color: #fff;
+  }
+  .category_head {
+    color: #fff !important;
+    & * {
+      color: #fff;
+    }
+    &:hover {
+      color: rgba(255, 255, 255, 0.9);
+    }
+    &:focus {
+      color: rgba(255, 255, 255, 0.9);
+    }
+  }
+}
+.light {
+  .table_pagination {
+    color: #000;
+    svg {
+      fill: #000;
+    }
+    span {
+      background: none !important;
+      color: #000 !important;
+    }
+  }
+}
