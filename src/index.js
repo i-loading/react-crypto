@@ -8,6 +8,8 @@ export const AppContext = createContext({
   currs: [],
   theme: "",
   themeHandler: () => {},
+  lang: "",
+  langHandler: () => {},
   currency: "",
   currencyHandler: () => {},
 });
@@ -25,6 +27,7 @@ const AppProvider = ({ children }) => {
   const [currentTheme, setCurrentTheme] = useState(
     () => localStorage.getItem("theme") || defaultTheme
   );
+  const [lang, setLang] = useState(() => localStorage.getItem("lang") || "en");
   const [currency, setCurrency] = useState(
     () => localStorage.getItem("currency") || "USD"
   );
@@ -34,6 +37,10 @@ const AppProvider = ({ children }) => {
   const themeHandler = (themeType) => {
     localStorage.setItem("theme", themeType);
     setCurrentTheme(themeType);
+  };
+  const langHandler = (langType) => {
+    localStorage.setItem("lang", langType);
+    setLang(langType);
   };
   const currencyHandler = (curType) => {
     localStorage.setItem("currency", curType);
@@ -50,18 +57,33 @@ const AppProvider = ({ children }) => {
       const newData = [];
       for (let i = 0; i < data.length; i++) {
         const element = data[i];
-        const newElem = {
+        let newElem = {
           id: element.id,
           name: element.name,
           symbol: element.symbol,
           rank: +Number(element.rank),
           supply: +Number(element.supply).toFixed(1),
           changePercent24Hr: +Number(element.changePercent24Hr).toFixed(1),
-          marketCapUsd: +Number(element.marketCapUsd).toFixed(1),
           maxSupply: +Number(element.maxSupply).toFixed(0),
+          marketCapUsd: +Number(element.marketCapUsd).toFixed(1),
           priceUsd: +Number(element.priceUsd).toFixed(2),
           volumeUsd24Hr: +Number(element.volumeUsd24Hr).toFixed(0),
         };
+        if (currency === "EUR") {
+          newElem = {
+            ...newElem,
+            marketCapUsd: +Number(element.marketCapUsd).toFixed(1) * 1.00345,
+            priceUsd: +Number(element.priceUsd).toFixed(2) * 1.00345,
+            volumeUsd24Hr: +Number(element.volumeUsd24Hr).toFixed(0) * 1.00345,
+          };
+        } else if (currency === "UAH") {
+          newElem = {
+            ...newElem,
+            marketCapUsd: +Number(element.marketCapUsd).toFixed(1) * 37.12,
+            priceUsd: +Number(element.priceUsd).toFixed(2) * 37.12,
+            volumeUsd24Hr: +Number(element.volumeUsd24Hr).toFixed(0) * 37.12,
+          };
+        }
         newData.push(newElem);
       }
       localStorage.setItem("currs", JSON.stringify(newData));
@@ -76,17 +98,23 @@ const AppProvider = ({ children }) => {
 
   useEffect(() => {
     fetchCrypto();
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currency]);
 
   const currencySymbol = {
     USD: "$",
+    EUR: "€",
+    UAH: "₴",
   };
   const value = {
     currs: currencies,
     theme: currentTheme,
     themeHandler: themeHandler,
+    lang,
+    langHandler,
     currency: currencySymbol[currency],
-    currencyHandler: currencyHandler,
+    currencyName: currency,
+    currencyHandler,
     singleCurData: singleCurData,
     isLoading: isLoading,
     error: error,

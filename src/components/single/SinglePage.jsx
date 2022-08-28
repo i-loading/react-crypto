@@ -15,7 +15,8 @@ numeral.defaultFormat("0,0.00");
 
 const SinglePage = () => {
   const { singleId } = useParams();
-  const { theme, currency, singleCurData } = useContext(AppContext);
+  const { theme, currency, currencyName, singleCurData, lang } =
+    useContext(AppContext);
   const [data] = singleCurData(singleId);
 
   return (
@@ -23,19 +24,23 @@ const SinglePage = () => {
       <section className={s.info}>
         <div className="container">
           <p className={s.crumbs}>
-            <NavLink to="/">Home</NavLink> <span>{">"}</span> {data.name}
+            <NavLink to="/">{lang === "en" ? "Home" : "Главная"}</NavLink>{" "}
+            <span>{">"}</span> {data.name}
           </p>
           <div className={s.cur_info}>
             <div className={s["left_side"]}>
               <h4>
                 {data.name} <span>{data.symbol}</span>
               </h4>
-              <p className={s.rank}>Rank #{data.rank}</p>
-              <p>Coin</p>
+              <p className={s.rank}>
+                {lang === "en" ? "Rank" : "Ранг"} #{data.rank}
+              </p>
+              <p>{lang === "en" ? "Coin" : "Монета"}</p>
             </div>
             <div className={s["right_side"]}>
               <span>
-                {data.name} Price <small>({data.symbol})</small>
+                {data.name} {lang === "en" ? "Price" : "Цена"}{" "}
+                <small>({data.symbol})</small>
               </span>
               <h3>
                 {`${currency}${numeral(data.priceUsd).format()}`}{" "}
@@ -43,19 +48,25 @@ const SinglePage = () => {
               </h3>
               <div className={s["right_side-info"]}>
                 <div>
-                  <p>Market Cap</p>
+                  <p>
+                    {lang === "en" ? "Market Cap" : "Рыночная капитализация"}
+                  </p>
                   <span>{`${currency}${numeral(data.marketCapUsd).format(
                     "0,0"
                   )}`}</span>
                 </div>
                 <div>
-                  <p>Volume</p>
+                  <p>{lang === "en" ? "Volume" : "Объем"}</p>
                   <span>{`${currency}${numeral(data.volumeUsd24Hr).format(
                     "0,0"
                   )}`}</span>
                 </div>
                 <div>
-                  <p>Circulating Supply</p>
+                  <p>
+                    {lang === "en"
+                      ? "Circulating Supply"
+                      : "Циркулирующее предложение"}
+                  </p>
                   <span>
                     {numeral(data.supply).format("0,0")} {data.symbol}
                   </span>
@@ -71,11 +82,11 @@ const SinglePage = () => {
             <AdvancedChart
               widgetProps={{
                 height: 750,
-                symbol: `${data.symbol}USD`,
+                symbol: `${data.symbol}${currencyName}`,
                 timezone: "Etc/UTC",
                 theme,
                 style: "1",
-                locale: "en",
+                locale: lang,
                 toolbar_bg: "#f1f3f6",
                 enable_publishing: false,
                 withdateranges: true,
@@ -88,8 +99,8 @@ const SinglePage = () => {
               widgetProps={{
                 colorTheme: theme,
                 isTransparent: false,
-                symbol: `${data.symbol}USD`,
-                locale: "en",
+                symbol: `${data.symbol}${currencyName}`,
+                locale: lang,
               }}
             />
           </div>
@@ -98,9 +109,9 @@ const SinglePage = () => {
               widgetProps={{
                 interval: "1m",
                 isTransparent: false,
-                symbol: `${data.symbol}USD`,
+                symbol: `${data.symbol}${currencyName}`,
                 showIntervalTabs: true,
-                locale: "en",
+                locale: lang,
                 colorTheme: theme,
               }}
             />
@@ -110,8 +121,8 @@ const SinglePage = () => {
                 colorTheme: theme,
                 isTransparent: false,
                 displayMode: "regular",
-                locale: "en",
-                symbol: `${data.symbol}USD`,
+                locale: lang,
+                symbol: `${data.symbol}${currencyName}`,
               }}
             />
           </aside>
@@ -119,7 +130,9 @@ const SinglePage = () => {
       </section>
       <section className={s.related}>
         <div className="container">
-          <h2>People also search for</h2>
+          <h2>
+            {lang === "en" ? "People also search for" : "Люди также ищут"}
+          </h2>
           <Ticker
             widgetProps={{
               symbols: [
@@ -147,7 +160,7 @@ const SinglePage = () => {
               colorTheme: theme,
               isTransparent: false,
               showSymbolLogo: true,
-              locale: "en",
+              locale: lang,
             }}
           />
         </div>

@@ -1,40 +1,17 @@
-import s from "./Header.module.scss";
-
+import { useContext } from "react";
 import { TickerTape } from "react-tradingview-embed";
-import { AiFillCaretDown, AiOutlineSearch } from "react-icons/ai";
 import { BsFillSunFill } from "react-icons/bs";
 import { IoMoonOutline } from "react-icons/io5";
-import { useContext, useEffect, useRef } from "react";
+
+import s from "./Header.module.scss";
 import { AppContext } from "./../../index";
 
-const ESCAPE_KEYS = ["27", "Escape"];
-const useEventListener = (eventName, handler, element = window) => {
-  const savedHandler = useRef();
-
-  useEffect(() => {
-    savedHandler.current = handler;
-  }, [handler]);
-
-  useEffect(() => {
-    const eventListener = (event) => savedHandler.current(event);
-    element.addEventListener(eventName, eventListener);
-    return () => {
-      element.removeEventListener(eventName, eventListener);
-    };
-  }, [eventName, element]);
-};
+import Currency from "./Currency";
+import Language from "./Language";
+import Search from "./Search";
 
 const Header = () => {
-  const { theme, themeHandler } = useContext(AppContext);
-  const ref = useRef();
-
-  const handler = ({ key }) => {
-    if (ESCAPE_KEYS.includes(String(key))) {
-      ref.current.focus();
-    }
-  };
-
-  useEventListener("keydown", handler);
+  const { theme, themeHandler, lang } = useContext(AppContext);
 
   return (
     <header className={s.header}>
@@ -70,19 +47,13 @@ const Header = () => {
             showSymbolLogo: true,
             colorTheme: theme,
             isTransparent: false,
-            displayMode: "adaptive",
-            locale: "en",
+            displayMode: "regular",
+            locale: lang,
           }}
         />
         <div className={s["header_help"]}>
-          <div className={s.lang}>
-            <span>English</span>
-            <AiFillCaretDown />
-          </div>
-          <div className={s.currency}>
-            <span>USD</span>
-            <AiFillCaretDown />
-          </div>
+          <Language />
+          <Currency />
           <div className={s.theme}>
             {theme === "dark" ? (
               <BsFillSunFill onClick={() => themeHandler("light")} />
@@ -90,15 +61,7 @@ const Header = () => {
               <IoMoonOutline onClick={() => themeHandler("dark")} />
             )}
           </div>
-          <div
-            className={`${theme === "dark" ? s.search_dark : s.search_light} ${
-              s.search
-            }`}
-          >
-            <AiOutlineSearch />
-            <input type="text" placeholder="Search" ref={ref} />
-            <div data-text="Use to trigger search">esc</div>
-          </div>
+          <Search />
         </div>
       </div>
     </header>

@@ -11,15 +11,6 @@ import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import TableSortLabel from "@mui/material/TableSortLabel";
-// import { alpha } from "@mui/material/styles";
-// import Toolbar from "@mui/material/Toolbar";
-// import Typography from "@mui/material/Typography";
-// import Paper from "@mui/material/Paper";
-// import Checkbox from "@mui/material/Checkbox";
-// import IconButton from "@mui/material/IconButton";
-// import Tooltip from "@mui/material/Tooltip";
-// import FormControlLabel from "@mui/material/FormControlLabel";
-// import Switch from "@mui/material/Switch";
 import { visuallyHidden } from "@mui/utils";
 
 import { AppContext } from "./../../index";
@@ -60,58 +51,59 @@ const headCells = [
     id: "rank",
     numeric: true,
     disablePadding: false,
-    label: "#",
+    labelEn: "#",
+    labelRu: "#",
   },
   {
     id: "name",
     numeric: false,
     disablePadding: false,
-    label: "Name",
+    labelEn: "Name",
+    labelRu: "Наименование",
   },
   {
     id: "priceUsd",
     numeric: true,
     disablePadding: false,
-    label: "Price",
+    labelEn: "Price",
+    labelRu: "Цена",
   },
   {
     id: "changePercent24Hr",
     numeric: true,
     disablePadding: false,
-    label: "1h %",
+    labelEn: "1h %",
+    labelRu: "1h %",
   },
   {
     id: "marketCapUsd",
     numeric: true,
     disablePadding: false,
-    label: "Market Cap",
+    labelEn: "Market Cap",
+    labelRu: "Рыночная капитализация",
   },
   {
     id: "volumeUsd24Hr",
     numeric: true,
     disablePadding: false,
-    label: "Volume(24h)",
+    labelEn: "Volume(24h)",
+    labelRu: "Объем (24ч)",
   },
   {
     id: "supply",
     numeric: true,
     disablePadding: false,
-    label: "Circulating Supply",
+    labelEn: "Circulating Supply",
+    labelRu: "Циркулирующее предложение",
   },
 ];
 
 function EnhancedTableHead(props) {
-  const {
-    // onSelectAllClick,
-    order,
-    orderBy,
-    // numSelected,
-    // rowCount,
-    onRequestSort,
-  } = props;
+  const { order, orderBy, onRequestSort } = props;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
+  const { lang } = useContext(AppContext);
 
   return (
     <TableHead>
@@ -129,7 +121,7 @@ function EnhancedTableHead(props) {
               onClick={createSortHandler(headCell.id)}
               className="category_head"
             >
-              {headCell.label}
+              {lang === "en" ? headCell.labelEn : headCell.labelRu}
               {orderBy === headCell.id ? (
                 <Box component="span" sx={visuallyHidden}>
                   {order === "desc" ? "sorted descending" : "sorted ascending"}
@@ -144,20 +136,16 @@ function EnhancedTableHead(props) {
 }
 
 EnhancedTableHead.propTypes = {
-  // numSelected: PropTypes.number.isRequired,
   onRequestSort: PropTypes.func.isRequired,
-  // onSelectAllClick: PropTypes.func.isRequired,
   order: PropTypes.oneOf(["asc", "desc"]).isRequired,
   rowCount: PropTypes.number.isRequired,
 };
 
 export default function EnhancedTable() {
-  const { currs, currency } = useContext(AppContext);
+  const { currs, currency, lang } = useContext(AppContext);
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState();
-  // const [selected, setSelected] = useState([]);
   const [page, setPage] = useState(0);
-  // const [dense, setDense] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(20);
 
   const handleRequestSort = (event, property) => {
@@ -165,35 +153,6 @@ export default function EnhancedTable() {
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
   };
-
-  // const handleSelectAllClick = (event) => {
-  //   if (event.target.checked) {
-  //     const newSelected = currs.map((n) => n.name);
-  //     setSelected(newSelected);
-  //     return;
-  //   }
-  //   setSelected([]);
-  // };
-
-  // const handleClick = (event, name) => {
-  //   const selectedIndex = selected.indexOf(name);
-  //   let newSelected = [];
-
-  //   if (selectedIndex === -1) {
-  //     newSelected = newSelected.concat(selected, name);
-  //   } else if (selectedIndex === 0) {
-  //     newSelected = newSelected.concat(selected.slice(1));
-  //   } else if (selectedIndex === selected.length - 1) {
-  //     newSelected = newSelected.concat(selected.slice(0, -1));
-  //   } else if (selectedIndex > 0) {
-  //     newSelected = newSelected.concat(
-  //       selected.slice(0, selectedIndex),
-  //       selected.slice(selectedIndex + 1)
-  //     );
-  //   }
-
-  //   setSelected(newSelected);
-  // };
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -203,8 +162,6 @@ export default function EnhancedTable() {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
-
-  // const isSelected = (name) => selected.indexOf(name) !== -1;
 
   const emptycurrs =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - currs.length) : 0;
@@ -218,10 +175,8 @@ export default function EnhancedTable() {
           cellSpacing={0}
         >
           <EnhancedTableHead
-            // numSelected={selected.length}
             order={order}
             orderBy={orderBy}
-            // onSelectAllClick={handleSelectAllClick}
             onRequestSort={handleRequestSort}
             rowCount={currs.length}
           />
@@ -229,18 +184,9 @@ export default function EnhancedTable() {
             {stableSort(currs, getComparator(order, orderBy))
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((row, index) => {
-                // const isItemSelected = isSelected(row.name);
                 const labelId = `enhanced-table-checkbox-${index}`;
                 return (
-                  <TableRow
-                    hover
-                    // onClick={(event) => handleClick(event, row.name)}
-                    role="checkbox"
-                    // aria-checked={isItemSelected}
-                    tabIndex={-1}
-                    key={row.name}
-                    // selected={isItemSelected}
-                  >
+                  <TableRow hover role="checkbox" tabIndex={-1} key={row.name}>
                     <TableCell width="1" padding="normal" align="right">
                       {row.rank}
                     </TableCell>
@@ -288,6 +234,9 @@ export default function EnhancedTable() {
         rowsPerPageOptions={[20, 50, 100]}
         component="div"
         count={currs.length}
+        labelRowsPerPage={
+          lang === "en" ? "Rows per page:" : "Рядов на странице:"
+        }
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}

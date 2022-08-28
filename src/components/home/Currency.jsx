@@ -1,37 +1,29 @@
-import s from "./Currency.module.scss";
-
-import numeral from "numeral";
-import { useContext } from "react";
-import { NavLink } from "react-router-dom";
+import { useState, useContext } from "react";
+import s from "./Header.module.scss";
+import { AiFillCaretDown } from "react-icons/ai";
 import { AppContext } from "./../../index";
 
-numeral.defaultFormat("0,0.00");
+const Currency = () => {
+  const [isVisible, seTisVisible] = useState(false);
+  const { currencyName, currencyHandler } = useContext(AppContext);
 
-const Currency = ({
-  rank,
-  name,
-  symbol,
-  priceUsd,
-  changePercent24Hr,
-  marketCapUsd,
-  volumeUsd24Hr,
-  supply,
-}) => {
-  const { currency } = useContext(AppContext);
+  const currencyOptionHandler = (curr) => {
+    seTisVisible(false);
+    currencyHandler(curr);
+  };
+
   return (
-    <tr className={s["single_cur"]}>
-      <td>{rank}</td>
-      <td>
-        <NavLink to={`/currency/${symbol}`}>{`${name} (${symbol})`}</NavLink>
-      </td>
-      <td>{`${currency}${numeral(priceUsd).format()}`}</td>
-      <td>{Number(changePercent24Hr).toFixed(1)}%</td>
-      <td>{`${currency}${numeral(marketCapUsd).format("0,0")}`}</td>
-      <td>{`${currency}${numeral(volumeUsd24Hr).format("0,0")}`}</td>
-      <td>
-        {numeral(supply).format("0,0")} {symbol}
-      </td>
-    </tr>
+    <div className={s.currency}>
+      <div onClick={() => seTisVisible(!isVisible)}>
+        <span>{currencyName}</span>
+        <AiFillCaretDown />
+      </div>
+      <div className={`${isVisible ? s.menu_show : ""} ${s.menu} menu`}>
+        <button onClick={() => currencyOptionHandler("USD")}>USD $</button>
+        <button onClick={() => currencyOptionHandler("EUR")}>EUR €</button>
+        <button onClick={() => currencyOptionHandler("UAH")}>UAH ₴</button>
+      </div>
+    </div>
   );
 };
 

@@ -101,7 +101,8 @@ h6 {
 }
 .dark a,
 .dark td,
-.dark th {
+.dark th,
+.dark button {
   color: #fff;
 }
 
@@ -110,7 +111,9 @@ h6 {
 .light a,
 .light span,
 .light td,
-.light th {
+.light th,
+.light button,
+.light .menu {
   background: #fff !important;
   color: #000 !important;
 }

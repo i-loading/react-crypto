@@ -167,7 +167,7 @@
   aside {
     @media screen and (max-width: 1210px) {
       display: flex;
-      align-items: start;
+      align-items: flex-start;
       justify-content: space-between;
     }
     @media screen and (max-width: 745px) {
