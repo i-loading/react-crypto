@@ -3,7 +3,9 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
 
-// const coinCap = "cb43810c-6de4-40fb-bc91-0d70154fe289";
+// const coinCapOld = "cb43810c-6de4-40fb-bc91-0d70154fe289";
+const coinCapAPI =
+  "28c4933a38845ceea3542a151be231f8436ffc1d48736653c9b2a91422033929";
 export const AppContext = createContext({
   currs: [],
   theme: "",
@@ -52,8 +54,13 @@ const AppProvider = ({ children }) => {
 
   const fetchCrypto = async () => {
     try {
-      const res = await fetch(`https://api.coincap.io/v2/assets?limit=500`);
+      // const res = await fetch(`https://api.coincap.io/v2/assets?limit=500`);  Old API fetch
+
+      const res = await fetch(`https://rest.coincap.io/v3/assets?limit=500`, {
+        headers: { Authorization: `Bearer ${coinCapAPI}` },
+      });
       const { data } = await res.json();
+
       const newData = [];
       for (let i = 0; i < data.length; i++) {
         const element = data[i];
