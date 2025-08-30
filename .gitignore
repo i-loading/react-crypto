@@ -4,6 +4,8 @@
 /node_modules
 /.pnp
 .pnp.js
+123
+123.pub
 
 # testing
 /coverage
