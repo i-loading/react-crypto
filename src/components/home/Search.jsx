@@ -1,7 +1,7 @@
-import { useState, useContext, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import s from "./Header.module.scss";
 import { AiOutlineSearch } from "react-icons/ai";
-import { AppContext } from "./../../index";
+import { useAppSelector } from "./../../store/hooks";
 import { NavLink } from "react-router-dom";
 import numeral from "numeral";
 numeral.defaultFormat("0,0.00");
@@ -24,7 +24,12 @@ const useEventListener = (eventName, handler, element = window) => {
 };
 
 const Search = () => {
-  const { currs, currency, theme, lang } = useContext(AppContext);
+  const currs = useAppSelector((s) => s.currencies.currs);
+  const currency = useAppSelector((s) =>
+    s.ui.currencyName === "USD" ? "$" : s.ui.currencyName === "EUR" ? "€" : "₴",
+  );
+  const theme = useAppSelector((s) => s.ui.theme);
+  const lang = useAppSelector((s) => s.ui.lang);
   const [isVisible, setIsVisible] = useState(false);
   const [initialCurrs, setInitialCurrs] = useState([]);
   const ref = useRef();
@@ -42,7 +47,7 @@ const Search = () => {
   const onChangeHandler = (e) => {
     const shownCurrs = currs
       .filter((curr) =>
-        curr.name.toLowerCase().includes(e.target.value.toLowerCase())
+        curr.name.toLowerCase().includes(e.target.value.toLowerCase()),
       )
       .slice(0, 5);
     setInitialCurrs(shownCurrs);

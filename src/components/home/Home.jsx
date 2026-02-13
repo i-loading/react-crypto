@@ -1,10 +1,9 @@
 import s from "./Home.module.scss";
 import Table from "./Table";
-import { useContext } from "react";
-import { AppContext } from "./../../index";
+import { useAppSelector } from "./../../store/hooks";
 
 const HomePage = () => {
-  const { isLoading, error } = useContext(AppContext);
+  const { isLoading, error } = useAppSelector((s) => s.currencies);
 
   return error && !isLoading ? (
     <div

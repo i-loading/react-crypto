@@ -6,6 +6,7 @@
 .pnp.js
 123
 123.pub
+.env
 
 # testing
 /coverage

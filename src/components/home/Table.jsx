@@ -1,6 +1,6 @@
 import "./Table.scss";
 
-import { useState, useContext } from "react";
+import { useState } from "react";
 import PropTypes from "prop-types";
 import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
@@ -13,7 +13,7 @@ import TableRow from "@mui/material/TableRow";
 import TableSortLabel from "@mui/material/TableSortLabel";
 import { visuallyHidden } from "@mui/utils";
 
-import { AppContext } from "./../../index";
+import { useAppSelector } from "./../../store/hooks";
 import { NavLink } from "react-router-dom";
 import numeral from "numeral";
 numeral.defaultFormat("0,0.00");
@@ -103,7 +103,7 @@ function EnhancedTableHead(props) {
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
-  const { lang } = useContext(AppContext);
+  const { lang } = useAppSelector((s) => s.ui);
 
   return (
     <TableHead>
@@ -142,7 +142,11 @@ EnhancedTableHead.propTypes = {
 };
 
 export default function EnhancedTable() {
-  const { currs, currency, lang } = useContext(AppContext);
+  const currs = useAppSelector((s) => s.currencies.currs);
+  const currency = useAppSelector((s) =>
+    s.ui.currencyName === "USD" ? "$" : s.ui.currencyName === "EUR" ? "€" : "₴",
+  );
+  const { lang } = useAppSelector((s) => s.ui);
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState();
   const [page, setPage] = useState(0);
@@ -201,16 +205,16 @@ export default function EnhancedTable() {
                       >{`${row.name} (${row.symbol})`}</NavLink>
                     </TableCell>
                     <TableCell align="right">{`${currency}${numeral(
-                      row.priceUsd
+                      row.priceUsd,
                     ).format()}`}</TableCell>
                     <TableCell align="right">
                       {`${Number(row.changePercent24Hr).toFixed(1)}%`}
                     </TableCell>
                     <TableCell align="right">{`${currency}${numeral(
-                      row.marketCapUsd
+                      row.marketCapUsd,
                     ).format("0,0")}`}</TableCell>
                     <TableCell align="right">{`${currency}${numeral(
-                      row.volumeUsd24Hr
+                      row.volumeUsd24Hr,
                     ).format("0,0")}`}</TableCell>
                     <TableCell align="right">
                       {`${numeral(row.supply).format("0,0")} ${row.symbol}`}

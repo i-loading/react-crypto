@@ -1,15 +1,17 @@
-import { useState, useContext } from "react";
+import { useState } from "react";
 import s from "./Header.module.scss";
 import { AiFillCaretDown } from "react-icons/ai";
-import { AppContext } from "./../../index";
+import { useAppDispatch, useAppSelector } from "./../../store/hooks";
+import { setCurrency } from "./../../store/slices/uiSlice";
 
 const Currency = () => {
   const [isVisible, seTisVisible] = useState(false);
-  const { currencyName, currencyHandler } = useContext(AppContext);
+  const currencyName = useAppSelector((s) => s.ui.currencyName);
+  const dispatch = useAppDispatch();
 
   const currencyOptionHandler = (curr) => {
     seTisVisible(false);
-    currencyHandler(curr);
+    dispatch(setCurrency(curr));
   };
 
   return (

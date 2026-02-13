@@ -4,11 +4,10 @@ import logo from "../../assets/blockchain.png";
 import appStore from "../../assets/app_store.svg";
 import googlePlay from "../../assets/google_play.png";
 import { NavLink } from "react-router-dom";
-import { useContext } from "react";
-import { AppContext } from "./../../index";
+import { useAppSelector } from "./../../store/hooks";
 
 const Footer = () => {
-  const { lang } = useContext(AppContext);
+  const lang = useAppSelector((s) => s.ui.lang);
 
   return (
     <footer className={s.footer}>

@@ -186,8 +186,8 @@
         }
       }
     }
-    & > div:last-child {
-      margin-top: 20px;
+    &:last-child {
+      // margin-top: 20px;
       @media screen and (max-width: 1210px) {
         margin-top: 0;
         height: 450px;

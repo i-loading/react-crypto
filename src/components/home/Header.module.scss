@@ -61,6 +61,7 @@
         position: relative;
         .menu_search {
           top: calc(100% + 10px);
+          z-index: 200;
           right: 3px;
           width: 150%;
           min-height: 200px;
@@ -95,6 +96,10 @@
           border-radius: 8px;
           padding: 8px;
           padding-left: 24px;
+          &:focus + div[data-text] {
+            opacity: 0;
+            visibility: hidden;
+          }
         }
         svg {
           fill: rgb(100, 107, 128);
@@ -118,10 +123,11 @@
           text-align: center;
           &[data-text] {
             top: 5px;
+            transition: all 0.2s ease-in;
             right: 10px;
             position: absolute;
             &:hover {
-              z-index: 200;
+              z-index: 300;
               &::after,
               &::before {
                 display: block;
